@@ -25,9 +25,6 @@ public class CuidadoresController {
 	
 	@GetMapping("/participantes")
 	public List<CompletoCddrDto> listarTodo(){
-		if(srv_cuidadores.listarCompleto().equals(null)) {
-			System.out.println("¡Qué!");
-		}
 		return srv_cuidadores.listarCompleto();
 	}
 	
@@ -35,4 +32,5 @@ public class CuidadoresController {
 	public SimpleCddrDto ver(@PathVariable int id) {
 		return srv_cuidadores.buscar(id);
 	}
+
 }

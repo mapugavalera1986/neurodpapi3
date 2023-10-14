@@ -1,7 +1,6 @@
 package org.pe.neurodispuesta.servicios;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.pe.neurodispuesta.mapeados.CuidadorMapeadosCompletos;
@@ -28,10 +27,10 @@ public class CuidadorService {
 	public List<SimpleCddrDto> listar(){
 		List<Cuidador> l_sin_procesar = r_cuidadores.findAll();
 		List<SimpleCddrDto> l_procesada = l_sin_procesar.stream()
-			.map(cd -> mapa_cuidadores.crearDto(cd))
+			.map(c -> mapa_cuidadores.crearDto(c))
 			.collect(Collectors.toList());
 		return l_procesada;
-	}	
+	}
 	
 	public List<CompletoCddrDto> listarCompleto(){
 		List<Cuidador> l_sin_procesar = r_cuidadores.findAll();
@@ -42,8 +41,6 @@ public class CuidadorService {
 	}
 	
 	public SimpleCddrDto buscar(int id) {
-		Optional<Cuidador> encontrado = r_cuidadores.findById(id);
-		SimpleCddrDto procesado = mapa_cuidadores.crearDtoSeguro(encontrado);
-		return procesado;
+		return mapa_cuidadores.crearDto(r_cuidadores.findById(id).get());
 	}
 }
