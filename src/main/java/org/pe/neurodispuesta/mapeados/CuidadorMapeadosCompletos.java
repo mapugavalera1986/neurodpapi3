@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.pe.neurodispuesta.modelos.Cuidador;
 import org.pe.neurodispuesta.modelos.Participante;
-import org.pe.neurodispuesta.transferencias.CompletoCddrDto;
+import org.pe.neurodispuesta.transferencias.CddrDto;
 import org.pe.neurodispuesta.transferencias.SimplePrtcDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ public class CuidadorMapeadosCompletos {
 	@Autowired
 	private ParticipanteMapeadosSimples mp_participantes;
 	
-	public CompletoCddrDto crearDto(Cuidador ingresar_c) {
+	public CddrDto crearDto(Cuidador ingresar_c) {
 		List<SimplePrtcDto>l_participantes = new LinkedList<SimplePrtcDto>();
-		CompletoCddrDto egreso_cc = new CompletoCddrDto();
+		CddrDto egreso_cc = new CddrDto();
 		for(Participante p: ingresar_c.getParticipantes()){
 			l_participantes.add(mp_participantes.crearDto(p));
 		}

@@ -7,7 +7,7 @@ import org.pe.neurodispuesta.mapeados.CuidadorMapeadosCompletos;
 import org.pe.neurodispuesta.mapeados.CuidadorMapeadosSimples;
 import org.pe.neurodispuesta.modelos.Cuidador;
 import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
-import org.pe.neurodispuesta.transferencias.CompletoCddrDto;
+import org.pe.neurodispuesta.transferencias.CddrDto;
 import org.pe.neurodispuesta.transferencias.SimpleCddrDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class CuidadorService {
 		return l_procesada;
 	}
 	
-	public CompletoCddrDto buscar(int id) {
+	public CddrDto buscar(int id) {
 		return mp_cuidadores_todo.crearDto(r_cuidadores.findById(id).get());
 	}
 }

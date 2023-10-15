@@ -2,19 +2,22 @@ package org.pe.neurodispuesta.transferencias;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
+import io.micrometer.common.lang.NonNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class CompletoCddrDto {
-	private int cuidadorId;
+@RequiredArgsConstructor
+public class CddrDto {
+	@NonNull
 	private String nmbrs;
+	@NonNull
 	private String apllds;
+	@NonNull
 	private String dni;
+	@NonNull
 	private String correoE;
+	@NonNull
 	private String telf;
 	private List<SimplePrtcDto> participantes;
 }
