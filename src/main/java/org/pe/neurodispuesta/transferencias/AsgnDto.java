@@ -5,13 +5,15 @@ import java.util.Date;
 import org.pe.neurodispuesta.modelos.Especialista;
 import org.pe.neurodispuesta.modelos.Participante;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AsgnDto {
 	private Participante participante;
 	private Especialista especialista;

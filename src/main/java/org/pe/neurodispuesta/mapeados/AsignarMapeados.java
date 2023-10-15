@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class AsignarMapeados {
 
 	@Autowired
-	private ParticipanteMapeadosSimples mp_participantes;
+	private ParticipanteMapeados mp_participantes;
 	public AsgnDto crearDto(Asignar ingresar_a) {
 		AsgnDto egreso_sa = new AsgnDto();
 		egreso_sa.setEspecialista(null);

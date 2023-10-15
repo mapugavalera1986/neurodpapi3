@@ -3,10 +3,10 @@ package org.pe.neurodispuesta.servicios;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.pe.neurodispuesta.mapeados.EspecialistaMapeadosSimples;
+import org.pe.neurodispuesta.mapeados.EspecialistaMapeados;
 import org.pe.neurodispuesta.modelos.Especialista;
 import org.pe.neurodispuesta.repositorios.IEspecialistaRepository;
-import org.pe.neurodispuesta.transferencias.SimpleEspcDto;
+import org.pe.neurodispuesta.transferencias.EspcDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +17,17 @@ public class EspecialistaService {
 	private IEspecialistaRepository r_especialistas;
 	
 	@Autowired
-	private EspecialistaMapeadosSimples mp_especialistas;
+	private EspecialistaMapeados mp_especialistas;
 		
-	public List<SimpleEspcDto> listar(){
+	public List<EspcDto> listar(){
 		List<Especialista> l_sin_procesar = r_especialistas.findAll();
-		List<SimpleEspcDto> l_procesada = l_sin_procesar.stream()
+		List<EspcDto> l_procesada = l_sin_procesar.stream()
 			.map(c -> mp_especialistas.crearDto(c))
 			.collect(Collectors.toList());
 		return l_procesada;
 	}
 	
-	public SimpleEspcDto buscar(int id) {
+	public EspcDto buscar(int id) {
 		return mp_especialistas.crearDto(r_especialistas.findById(id).get());
 	}
 }

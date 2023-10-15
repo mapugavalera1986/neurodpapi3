@@ -2,22 +2,20 @@ package org.pe.neurodispuesta.transferencias;
 
 import java.util.List;
 
-import io.micrometer.common.lang.NonNull;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+//@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CddrDto {
-	@NonNull
 	private String nmbrs;
-	@NonNull
 	private String apllds;
-	@NonNull
 	private String dni;
-	@NonNull
 	private String correoE;
-	@NonNull
 	private String telf;
-	private List<SimplePrtcDto> participantes;
+	private List<PrtcDto> participantes;
 }

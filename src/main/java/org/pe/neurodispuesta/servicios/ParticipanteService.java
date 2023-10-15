@@ -3,12 +3,11 @@ package org.pe.neurodispuesta.servicios;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.pe.neurodispuesta.mapeados.ParticipanteMapeadosCompletos;
-import org.pe.neurodispuesta.mapeados.ParticipanteMapeadosSimples;
+import org.pe.neurodispuesta.mapeados.CuidadorMapeados;
+import org.pe.neurodispuesta.mapeados.ParticipanteMapeados;
 import org.pe.neurodispuesta.modelos.Participante;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
-import org.pe.neurodispuesta.transferencias.CompletoPrtcDto;
-import org.pe.neurodispuesta.transferencias.SimplePrtcDto;
+import org.pe.neurodispuesta.transferencias.PrtcDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,20 +18,23 @@ public class ParticipanteService {
 	private IParticipanteRepository r_participantes;
 	
 	@Autowired
-	private ParticipanteMapeadosSimples mp_participantes;
+	private ParticipanteMapeados mp_participantes;
 	
 	@Autowired
-	private ParticipanteMapeadosCompletos mp_participantes_todo;
+	private CuidadorMapeados mp_cuidadores;
 	
-	public List<SimplePrtcDto> listar(){
+	public List<PrtcDto> listar(){
 		List<Participante> l_sin_procesar = r_participantes.findAll();
-		List<SimplePrtcDto> l_procesada = l_sin_procesar.stream()
+		List<PrtcDto> l_procesada = l_sin_procesar.stream()
 			.map(c -> mp_participantes.crearDto(c))
 			.collect(Collectors.toList());
 		return l_procesada;
 	}
 	
-	public CompletoPrtcDto buscar(int id) {
-		return mp_participantes_todo.crearDto(r_participantes.findById(id).get());
+	public PrtcDto buscar(int id) {
+		Participante p_buscado = r_participantes.findById(id).get();
+		PrtcDto p_procesado = mp_participantes.crearDto(p_buscado);
+		p_procesado.setCuidador(mp_cuidadores.crearDto(p_buscado.getCuidador()));
+		return p_procesado;
 	}
 }
