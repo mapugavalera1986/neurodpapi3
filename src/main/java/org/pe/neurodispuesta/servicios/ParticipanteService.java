@@ -14,40 +14,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ParticipanteService {
-	@Autowired
-	private IParticipanteRepository r_participantees;
 	
 	@Autowired
-	private ParticipanteMapeadosSimples mapa_participantes;
+	private IParticipanteRepository r_participantes;
 	
 	@Autowired
-	private ParticipanteMapeadosCompletos mapa_participantes_todo;
+	private ParticipanteMapeadosSimples mp_participantes;
+	
+	@Autowired
+	private ParticipanteMapeadosCompletos mp_participantes_todo;
 	
 	public List<SimplePrtcDto> listar(){
-		List<Participante> p_lista = r_participantees.findAll();
-		List<SimplePrtcDto> p_lista_dto = p_lista.stream()
-			.map(prt -> mapa_participantes.crearDto(prt))
+		List<Participante> l_sin_procesar = r_participantes.findAll();
+		List<SimplePrtcDto> l_procesada = l_sin_procesar.stream()
+			.map(c -> mp_participantes.crearDto(c))
 			.collect(Collectors.toList());
-		return p_lista_dto;
+		return l_procesada;
 	}
 	
-	public List<CompletoPrtcDto> listarCompleto(){
-		List<Participante> p_lista = r_participantees.findAll();
-		List<CompletoPrtcDto> p_lista_dto = p_lista.stream()
-			.map(prt -> mapa_participantes_todo.crearDto(prt))
-			.collect(Collectors.toList());
-		return p_lista_dto;
-	}
-	
-	public SimplePrtcDto buscar(int id) {
-		return mapa_participantes.crearDto(r_participantees.findById(id).get());
-	}
-	
-	public Participante ingresar(Participante nuevo_c) {
-		return r_participantees.saveAndFlush(nuevo_c);
-	}
-	
-	public void eliminar(int id) {
-		r_participantees.deleteById(id);
+	public CompletoPrtcDto buscar(int id) {
+		return mp_participantes_todo.crearDto(r_participantes.findById(id).get());
 	}
 }

@@ -17,17 +17,17 @@ public class EspecialistaService {
 	private IEspecialistaRepository r_especialistas;
 	
 	@Autowired
-	private EspecialistaMapeadosSimples mapa_especialistas;
-	
+	private EspecialistaMapeadosSimples mp_especialistas;
+		
 	public List<SimpleEspcDto> listar(){
-		List<Especialista> e_lista = r_especialistas.findAll();
-		List<SimpleEspcDto> e_lista_dto = e_lista.stream()
-			.map(e -> mapa_especialistas.crearDto(e))
+		List<Especialista> l_sin_procesar = r_especialistas.findAll();
+		List<SimpleEspcDto> l_procesada = l_sin_procesar.stream()
+			.map(c -> mp_especialistas.crearDto(c))
 			.collect(Collectors.toList());
-		return e_lista_dto;
+		return l_procesada;
 	}
 	
 	public SimpleEspcDto buscar(int id) {
-		return mapa_especialistas.crearDto(r_especialistas.findById(id).get());
+		return mp_especialistas.crearDto(r_especialistas.findById(id).get());
 	}
 }
