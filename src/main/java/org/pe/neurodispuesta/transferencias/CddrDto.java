@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CddrDto {
+	private int cuidadorId;
 	private String nmbrs;
 	private String apllds;
 	private String dni;

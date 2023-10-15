@@ -27,7 +27,24 @@ public class EspecialistaService {
 		return l_procesada;
 	}
 	
+	public List<EspcDto> listarActivos(){
+		List<Especialista> l_sin_procesar = r_especialistas.findAllByActivo(true);
+		List<EspcDto> l_procesada = l_sin_procesar.stream()
+			.map(c -> mp_especialistas.crearDto(c))
+			.collect(Collectors.toList());
+		return l_procesada;
+	}
+	
 	public EspcDto buscar(int id) {
 		return mp_especialistas.crearDto(r_especialistas.findById(id).get());
+	}
+	
+	public EspcDto agregar(EspcDto nuevo_e) {
+		Especialista procesado_e = mp_especialistas.convertir(nuevo_e);
+		return mp_especialistas.crearDto(r_especialistas.saveAndFlush(procesado_e));
+	}
+	
+	public void eliminar(int id) {
+		r_especialistas.deleteById(id);
 	}
 }

@@ -16,6 +16,7 @@ public class EspecialistaMapeados {
 	
 	public Especialista convertir(EspcDto ingresar_se) {
 		Especialista egreso_e = new Especialista();
+		BeanUtils.copyProperties(ingresar_se, egreso_e);
 		return egreso_e;
 	}
 }

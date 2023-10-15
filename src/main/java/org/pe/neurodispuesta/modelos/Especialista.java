@@ -27,4 +27,5 @@ public class Especialista {
 	private String correoE;
 	private String telf;
 	private Date fechaIngreso;
+	private boolean activo;
 }

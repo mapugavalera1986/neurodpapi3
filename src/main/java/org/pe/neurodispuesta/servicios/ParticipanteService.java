@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.pe.neurodispuesta.mapeados.CuidadorMapeados;
 import org.pe.neurodispuesta.mapeados.ParticipanteMapeados;
 import org.pe.neurodispuesta.modelos.Participante;
+import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
 import org.pe.neurodispuesta.transferencias.PrtcDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class ParticipanteService {
 	
 	@Autowired
 	private ParticipanteMapeados mp_participantes;
+	
+	@Autowired
+	private ICuidadorRepository r_cuidadores;
 	
 	@Autowired
 	private CuidadorMapeados mp_cuidadores;
@@ -36,5 +40,15 @@ public class ParticipanteService {
 		PrtcDto p_procesado = mp_participantes.crearDto(p_buscado);
 		p_procesado.setCuidador(mp_cuidadores.crearDto(p_buscado.getCuidador()));
 		return p_procesado;
+	}
+	
+	public PrtcDto agregar(PrtcDto nuevo_p) {
+		Participante procesado_p = mp_participantes.convertir(nuevo_p);
+		procesado_p.setCuidador(r_cuidadores.findById(nuevo_p.getCuidador().getCuidadorId()).get());
+		return mp_participantes.crearDto(r_participantes.saveAndFlush(procesado_p));
+	}
+	
+	public void eliminar(int id) {
+		r_participantes.deleteById(id);
 	}
 }

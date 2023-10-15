@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PrtcDto {
 	private int participanteId;
 	private String nmbrs;

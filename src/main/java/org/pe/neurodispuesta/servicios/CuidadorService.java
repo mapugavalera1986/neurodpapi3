@@ -41,4 +41,13 @@ public class CuidadorService {
 		c_procesado.setParticipantes(l_parts);
 		return c_procesado;
 	}
+	
+	public CddrDto agregar(CddrDto nuevo_c) {
+		Cuidador procesado_c = mp_cuidadores.convertir(nuevo_c);
+		return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(procesado_c));
+	}
+	
+	public void eliminar(int id) {
+		r_cuidadores.deleteById(id);
+	}
 }
