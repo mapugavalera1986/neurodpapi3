@@ -39,18 +39,29 @@ public class ParticipanteService {
 	}
 	
 	public PrtcDto agregar(PrtcDto ingresar_p) {
-		int participante_id = ingresar_p.getParticipanteId();
-		if (r_participantes.findById(participante_id).isPresent()) {
-			ingresar_p.setParticipanteId(participante_id);
-		}else {
-			ingresar_p.setParticipanteId(0);
-		}
-		Participante procesar_p = mp_participantes.convertir(ingresar_p);
-		procesar_p.setCuidador(mp_cuidadores.convertir(ingresar_p.getCuidador()));
-		return mp_participantes.crearDto(r_participantes.saveAndFlush(procesar_p));
+		ingresar_p.setParticipanteId(0);
+		Participante egresar = mp_participantes.convertir(ingresar_p);
+		egresar.setCuidador(mp_cuidadores.convertir(ingresar_p.getCuidador()));
+		return mp_participantes.crearDto(r_participantes.saveAndFlush(egresar));
 	}
 	
-	public void eliminar(int id) {
-		r_participantes.deleteById(id);
+	public PrtcDto modificar(int id, PrtcDto modificar_p) throws Exception {
+		if(r_participantes.findById(id).isPresent()) {
+			modificar_p.setParticipanteId(id);
+			Participante egresar = mp_participantes.convertir(modificar_p);
+			egresar.setCuidador(mp_cuidadores.convertir(modificar_p.getCuidador()));
+			return mp_participantes.crearDto(r_participantes.saveAndFlush(egresar));
+		} else {
+			throw new IllegalArgumentException("Necesitas un ID para su modificación");
+		}
+	}
+	
+	public boolean eliminar(int id) {
+		if(r_participantes.findById(id).isPresent()) {
+			r_participantes.deleteById(id);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

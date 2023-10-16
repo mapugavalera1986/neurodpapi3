@@ -43,17 +43,27 @@ public class CuidadorService {
 	}
 	
 	public CddrDto agregar(CddrDto ingresar_c) {
-		int cuidador_id = ingresar_c.getCuidadorId();
-		if (r_cuidadores.findById(cuidador_id).isPresent()) {
-			ingresar_c.setCuidadorId(cuidador_id);
-		}else {
-			ingresar_c.setCuidadorId(0);
-		}
-		Cuidador procesar_c = mp_cuidadores.convertir(ingresar_c);
-		return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(procesar_c));
+		ingresar_c.setCuidadorId(0);
+		Cuidador egresar = mp_cuidadores.convertir(ingresar_c);
+		return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(egresar));
 	}
 	
-	public void eliminar(int id) {
-		r_cuidadores.deleteById(id);
+	public CddrDto modificar(int id, CddrDto modificar_c) throws Exception {
+		if(r_cuidadores.findById(id).isPresent()) {
+			modificar_c.setCuidadorId(id);
+			Cuidador procesar_c = mp_cuidadores.convertir(modificar_c);
+			return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(procesar_c));
+		} else {
+			throw new IllegalArgumentException("Necesitas un ID para su modificación");
+		}
+	}
+	
+	public boolean eliminar(int id) {
+		if(r_cuidadores.findById(id).isPresent()) {
+			r_cuidadores.deleteById(id);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

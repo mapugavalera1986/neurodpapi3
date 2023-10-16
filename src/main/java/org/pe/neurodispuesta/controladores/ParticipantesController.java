@@ -6,15 +6,19 @@ import org.pe.neurodispuesta.servicios.ParticipanteService;
 import org.pe.neurodispuesta.transferencias.PrtcDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/participantes")
@@ -38,8 +42,21 @@ public class ParticipantesController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> registrar(@RequestBody PrtcDto nuevo_p){
-		return new ResponseEntity<Object>(srv_participantes.agregar(nuevo_p), HttpStatus.CREATED);
+	public ResponseEntity<Object> agregar(@RequestBody @Valid PrtcDto nuevo_p){
+		try {
+			return new ResponseEntity<Object>(srv_participantes.agregar(nuevo_p), HttpStatus.CREATED);
+		} catch(Exception e) {
+			return new ResponseEntity<Object>((HttpStatusCode) e);
+		}
+	}
+
+	@PutMapping
+	public ResponseEntity<Object> modificar(@RequestParam int id, @RequestBody @Valid PrtcDto modificar_p){
+		try {
+			return new ResponseEntity<Object>(srv_participantes.modificar(id, modificar_p), HttpStatus.CREATED);
+		} catch(Exception e) {
+			return new ResponseEntity<Object>((HttpStatusCode) e);
+		}
 	}
 	
 	@DeleteMapping

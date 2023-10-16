@@ -39,12 +39,28 @@ public class EspecialistaService {
 		return mp_especialistas.crearDto(r_especialistas.findById(id).get());
 	}
 	
-	public EspcDto agregar(EspcDto nuevo_e) {
-		Especialista procesado_e = mp_especialistas.convertir(nuevo_e);
-		return mp_especialistas.crearDto(r_especialistas.saveAndFlush(procesado_e));
+	public EspcDto agregar(EspcDto ingresar_c) {
+		ingresar_c.setEspecialistaId(0);
+		Especialista egresar = mp_especialistas.convertir(ingresar_c);
+		return mp_especialistas.crearDto(r_especialistas.saveAndFlush(egresar));
 	}
 	
-	public void eliminar(int id) {
-		r_especialistas.deleteById(id);
+	public EspcDto modificar(int id, EspcDto modificar_e) throws Exception {
+		if(r_especialistas.findById(id).isPresent()) {
+			modificar_e.setEspecialistaId(id);
+			Especialista egresar = mp_especialistas.convertir(modificar_e);
+			return mp_especialistas.crearDto(r_especialistas.saveAndFlush(egresar));
+		} else {
+			throw new IllegalArgumentException("Necesitas un ID para su modificación");
+		}
+	}
+	
+	public boolean eliminar(int id) {
+		if(r_especialistas.findById(id).isPresent()) {
+			r_especialistas.deleteById(id);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

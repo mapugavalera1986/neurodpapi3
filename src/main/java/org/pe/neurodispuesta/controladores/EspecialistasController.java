@@ -6,15 +6,19 @@ import org.pe.neurodispuesta.servicios.EspecialistaService;
 import org.pe.neurodispuesta.transferencias.EspcDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/especialistas")
@@ -42,17 +46,25 @@ public class EspecialistasController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> agregar(@RequestBody EspcDto nuevo_e){
-		return new ResponseEntity<Object>(srv_especialistas.agregar(nuevo_e), HttpStatus.CREATED);
+	public ResponseEntity<Object> agregar(@RequestBody @Valid EspcDto nuevo_e){
+		try {
+			return new ResponseEntity<Object>(srv_especialistas.agregar(nuevo_e), HttpStatus.CREATED);
+		} catch(Exception e) {
+			return new ResponseEntity<Object>((HttpStatusCode) e);
+		}
+	}
+	
+	@PutMapping
+	public ResponseEntity<Object> modificar(@RequestParam int id, @RequestBody @Valid EspcDto modificar_c){
+		try {
+			return new ResponseEntity<Object>(srv_especialistas.modificar(id, modificar_c), HttpStatus.CREATED);
+		} catch(Exception e) {
+			return new ResponseEntity<Object>((HttpStatusCode) e);
+		}
 	}
 	
 	@DeleteMapping
 	public ResponseEntity<Object> eliminar(@RequestParam int id){
-		try {
-			srv_especialistas.eliminar(id);
-			return new ResponseEntity<Object>(HttpStatus.ACCEPTED);
-		}catch(Exception e){
-			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-		}
+		return new ResponseEntity<Object>(srv_especialistas.eliminar(id), HttpStatus.OK);
 	}
 }

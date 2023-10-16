@@ -48,19 +48,31 @@ public class CitaService {
 	}
 	
 	public CitaDto agregar(CitaDto ingresar_c) {
-		int cita_id = ingresar_c.getCitaId();
-		if(r_citas.findById(cita_id).isPresent()) {
-			ingresar_c.setCitaId(cita_id);
-		} else {
-			ingresar_c.setCitaId(0);
-		}
-		Cita procesar_c = mp_citas.convertir(ingresar_c);
-		procesar_c.setParticipante(mp_participantes.convertir(ingresar_c.getParticipante()));
-		procesar_c.setEspecialista(mp_especialistas.convertir(ingresar_c.getEspecialista()));
-		return mp_citas.crearDto(r_citas.saveAndFlush(procesar_c));
+		ingresar_c.setCitaId(0);
+		Cita egresar = mp_citas.convertir(ingresar_c);
+		egresar.setParticipante(mp_participantes.convertir(ingresar_c.getParticipante()));
+		egresar.setEspecialista(mp_especialistas.convertir(ingresar_c.getEspecialista()));
+		return mp_citas.crearDto(r_citas.saveAndFlush(egresar));
 	}
 	
-	public void eliminar(int id) {
-		r_citas.deleteById(id);
+	public CitaDto modificar(int id, CitaDto modificar_c) throws Exception {
+		if(r_citas.findById(id).isPresent()) {
+			modificar_c.setCitaId(id);
+			Cita egresar = mp_citas.convertir(modificar_c);
+			egresar.setParticipante(mp_participantes.convertir(modificar_c.getParticipante()));
+			egresar.setEspecialista(mp_especialistas.convertir(modificar_c.getEspecialista()));
+			return mp_citas.crearDto(r_citas.saveAndFlush(egresar));
+		} else {
+			throw new IllegalArgumentException("Necesitas un ID para su modificación");
+		}
+	}
+	
+	public boolean eliminar(int id) {
+		if(r_citas.findById(id).isPresent()) {
+			r_citas.deleteById(id);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
