@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.pe.neurodispuesta.mapeados.CuidadorMapeados;
 import org.pe.neurodispuesta.mapeados.ParticipanteMapeados;
 import org.pe.neurodispuesta.modelos.Participante;
-import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
 import org.pe.neurodispuesta.transferencias.PrtcDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ public class ParticipanteService {
 	
 	@Autowired
 	private ParticipanteMapeados mp_participantes;
-	
-	@Autowired
-	private ICuidadorRepository r_cuidadores;
 	
 	@Autowired
 	private CuidadorMapeados mp_cuidadores;
@@ -42,10 +38,16 @@ public class ParticipanteService {
 		return p_procesado;
 	}
 	
-	public PrtcDto agregar(PrtcDto nuevo_p) {
-		Participante procesado_p = mp_participantes.convertir(nuevo_p);
-		procesado_p.setCuidador(r_cuidadores.findById(nuevo_p.getCuidador().getCuidadorId()).get());
-		return mp_participantes.crearDto(r_participantes.saveAndFlush(procesado_p));
+	public PrtcDto agregar(PrtcDto ingresar_p) {
+		int participante_id = ingresar_p.getParticipanteId();
+		if (r_participantes.findById(participante_id).isPresent()) {
+			ingresar_p.setParticipanteId(participante_id);
+		}else {
+			ingresar_p.setParticipanteId(0);
+		}
+		Participante procesar_p = mp_participantes.convertir(ingresar_p);
+		procesar_p.setCuidador(mp_cuidadores.convertir(ingresar_p.getCuidador()));
+		return mp_participantes.crearDto(r_participantes.saveAndFlush(procesar_p));
 	}
 	
 	public void eliminar(int id) {

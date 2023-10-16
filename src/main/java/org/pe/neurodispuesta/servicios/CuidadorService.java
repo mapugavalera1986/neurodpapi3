@@ -42,9 +42,15 @@ public class CuidadorService {
 		return c_procesado;
 	}
 	
-	public CddrDto agregar(CddrDto nuevo_c) {
-		Cuidador procesado_c = mp_cuidadores.convertir(nuevo_c);
-		return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(procesado_c));
+	public CddrDto agregar(CddrDto ingresar_c) {
+		int cuidador_id = ingresar_c.getCuidadorId();
+		if (r_cuidadores.findById(cuidador_id).isPresent()) {
+			ingresar_c.setCuidadorId(cuidador_id);
+		}else {
+			ingresar_c.setCuidadorId(0);
+		}
+		Cuidador procesar_c = mp_cuidadores.convertir(ingresar_c);
+		return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(procesar_c));
 	}
 	
 	public void eliminar(int id) {
