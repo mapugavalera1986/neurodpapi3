@@ -25,6 +25,8 @@ public class Asignar {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int asignarId;
+	@ManyToOne
+	@JoinColumn(name="participante_id")
 	private Participante participante;
 	@ManyToOne
 	@JoinColumn(name="especialista_id")
