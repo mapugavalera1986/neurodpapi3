@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.pe.neurodispuesta.mapeadores.AsignarEspecialistaMapper;
 import org.pe.neurodispuesta.mapeadores.ParticipanteMapper;
 import org.pe.neurodispuesta.modelos.Participante;
 import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
@@ -26,10 +25,7 @@ public class ParticipanteService {
 	
 	@Autowired
 	private ParticipanteMapper mp_participantes;
-	
-	@Autowired
-	private AsignarEspecialistaMapper mp_asignaciones;
-	
+
 	public List<ParticipanteDTO> listarTodos(){
 		List<Participante> l_parcial = r_participantes.findAll();
 		return l_parcial.stream().map(mp_participantes::crearDto).collect(Collectors.toList());
@@ -65,16 +61,7 @@ public class ParticipanteService {
 	public void eliminar(int id) {
 		Optional<Participante> p_eliminado = r_participantes.findById(id);
 		if(p_eliminado.isPresent()) {
-			// p_eliminado_total = p_eliminado.get(); aquí se elimina todo
 			r_participantes.deleteById(id);
 		}
-	}
-	
-	public List<AsignarEspecialistaDTO> listar_asignaciones(int participanteId){
-		Optional<Participante> p_asignado = r_participantes.findById(participanteId);
-		return p_asignado.map(p -> p.getAsignaparticipantes().stream()
-				.map(mp_asignaciones::crearDto)
-				.collect(Collectors.toList()))
-				.orElse(null);
 	}
 }

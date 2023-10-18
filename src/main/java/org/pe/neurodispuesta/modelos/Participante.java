@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +36,4 @@ public class Participante {
 	@ManyToOne
 	@JoinColumn(name="cuidador_id")
 	private Cuidador cuidador;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participante")
-	private List<Asignar> asignaparticipantes;
 }

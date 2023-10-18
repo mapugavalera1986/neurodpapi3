@@ -25,8 +25,18 @@ public class EspecialistaService {
 		return l_parcial.stream().map(mp_especialistas::crearDto).collect(Collectors.toList());
 	}
 	
+	public List<EspecialistaDTO> listarActivos(){
+		List<Especialista> l_parcial = r_especialistas.findAllByActivo(true);
+		return l_parcial.stream().map(mp_especialistas::crearDto).collect(Collectors.toList());
+	}
+	
 	public Optional<EspecialistaDTO> buscar(int id){
 		Optional<Especialista> p_buscado = r_especialistas.findById(id);
+		return p_buscado.map(mp_especialistas::crearDto);
+	}
+	
+	public Optional<EspecialistaDTO> buscarActivo(int id, boolean activo){
+		Optional<Especialista> p_buscado = r_especialistas.findByEspecialistaIdAndActivo(id, activo);
 		return p_buscado.map(mp_especialistas::crearDto);
 	}
 	

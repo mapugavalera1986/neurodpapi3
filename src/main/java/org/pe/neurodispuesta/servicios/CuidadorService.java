@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import org.pe.neurodispuesta.mapeadores.CuidadorMapper;
 import org.pe.neurodispuesta.mapeadores.ParticipanteMapper;
 import org.pe.neurodispuesta.modelos.Cuidador;
+import org.pe.neurodispuesta.modelos.Participante;
 import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
+import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
 import org.pe.neurodispuesta.transferencias.CuidadorDTO;
 import org.pe.neurodispuesta.transferencias.ParticipanteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class CuidadorService {
 	
 	@Autowired
 	private ICuidadorRepository r_cuidadores;
+	
+	@Autowired
+	private IParticipanteRepository r_participantes;
 	
 	@Autowired
 	private ParticipanteMapper mp_participantes;
@@ -60,7 +65,9 @@ public class CuidadorService {
 	public void eliminar(int id) {
 		Optional<Cuidador> p_eliminado = r_cuidadores.findById(id);
 		if(p_eliminado.isPresent()) {
-			// p_eliminado_total = p_eliminado.get(); aquí se elimina todo
+			for(Participante p : p_eliminado.get().getParticipantes()) {
+				r_participantes.deleteById(p.getParticipanteId());
+			}
 			r_cuidadores.deleteById(id);
 		}
 	}
