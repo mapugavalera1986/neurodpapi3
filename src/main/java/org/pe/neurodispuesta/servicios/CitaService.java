@@ -1,14 +1,17 @@
 package org.pe.neurodispuesta.servicios;
 
-import java.util.LinkedList;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.pe.neurodispuesta.mapeados.CitaMapeados;
-import org.pe.neurodispuesta.mapeados.EspecialistaMapeados;
-import org.pe.neurodispuesta.mapeados.ParticipanteMapeados;
+import org.pe.neurodispuesta.mapeadores.CitaMapper;
 import org.pe.neurodispuesta.modelos.Cita;
+import org.pe.neurodispuesta.modelos.EstadoCita;
+import org.pe.neurodispuesta.modelos.ModalidadCita;
+import org.pe.neurodispuesta.repositorios.IAsignarRepository;
 import org.pe.neurodispuesta.repositorios.ICitaRepository;
-import org.pe.neurodispuesta.transferencias.CitaDto;
+import org.pe.neurodispuesta.transferencias.CitaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,62 +20,47 @@ public class CitaService {
 	
 	@Autowired
 	private ICitaRepository r_citas;
-
-	@Autowired
-	private CitaMapeados mp_citas;
 	
 	@Autowired
-	private EspecialistaMapeados mp_especialistas;
+	private CitaMapper mp_citas;
 	
 	@Autowired
-	private ParticipanteMapeados mp_participantes;
+	private IAsignarRepository r_asignaciones;
 	
-	public List<CitaDto> listar(){
-		List<Cita> l_sin_procesar = r_citas.findAll();
-		List<CitaDto> l_procesada = new LinkedList<CitaDto>();
-		for(Cita c : l_sin_procesar) {
-			CitaDto cp = mp_citas.crearDto(c);
-			cp.setParticipante(mp_participantes.crearDto(c.getParticipante()));
-			cp.setEspecialista(mp_especialistas.crearDto(c.getEspecialista()));
-			l_procesada.add(cp);
-		}
-		return l_procesada;
+	public List<CitaDTO> listarTodos(){
+		List<Cita> l_parcial = r_citas.findAll();
+		return l_parcial.stream().map(mp_citas::crearDto).collect(Collectors.toList());
 	}
 	
-	public CitaDto buscar(int id) {
-		Cita c_buscada = r_citas.findById(id).get();
-		CitaDto c_procesada = mp_citas.crearDto(c_buscada);
-		c_procesada.setParticipante(mp_participantes.crearDto(c_buscada.getParticipante()));
-		c_procesada.setEspecialista(mp_especialistas.crearDto(c_buscada.getEspecialista()));
-		return c_procesada;
+	public Optional<CitaDTO> buscar(int id){
+		Optional<Cita> p_buscado = r_citas.findById(id);
+		return p_buscado.map(mp_citas::crearDto);
 	}
 	
-	public CitaDto agregar(CitaDto ingresar_c) {
-		ingresar_c.setCitaId(0);
-		Cita egresar = mp_citas.convertir(ingresar_c);
-		egresar.setParticipante(mp_participantes.convertir(ingresar_c.getParticipante()));
-		egresar.setEspecialista(mp_especialistas.convertir(ingresar_c.getEspecialista()));
-		return mp_citas.crearDto(r_citas.saveAndFlush(egresar));
+	public CitaDTO agregar(CitaDTO p_nuevo) throws ParseException {
+		Cita p_procesado = mp_citas.crearEntidad(p_nuevo);
+		return mp_citas.crearDto(r_citas.saveAndFlush(p_procesado));
 	}
 	
-	public CitaDto modificar(int id, CitaDto modificar_c) throws Exception {
-		if(r_citas.findById(id).isPresent()) {
-			modificar_c.setCitaId(id);
-			Cita egresar = mp_citas.convertir(modificar_c);
-			egresar.setParticipante(mp_participantes.convertir(modificar_c.getParticipante()));
-			egresar.setEspecialista(mp_especialistas.convertir(modificar_c.getEspecialista()));
-			return mp_citas.crearDto(r_citas.saveAndFlush(egresar));
+	public CitaDTO modificar(int id, CitaDTO p_cambiar) {
+		Optional<Cita> p_encontrado = r_citas.findById(id);
+		if(p_encontrado.isPresent()) {
+			Cita p_procesado = p_encontrado.get();
+			p_procesado.setAsigna_especialista(r_asignaciones.findById(p_cambiar.getAsignarId()).get());
+			p_procesado.setModalidadCita(ModalidadCita.valueOf(p_cambiar.getModalidadCita()));
+			p_procesado.setFecha(p_cambiar.getFecha());
+			p_procesado.setEstadoCita(EstadoCita.valueOf(p_cambiar.getEstadoCita()));
+			return mp_citas.crearDto(r_citas.saveAndFlush(p_procesado));
 		} else {
-			throw new IllegalArgumentException("Necesitas un ID para su modificación");
+			return null;
 		}
 	}
 	
-	public boolean eliminar(int id) {
-		if(r_citas.findById(id).isPresent()) {
+	public void eliminar(int id) {
+		Optional<Cita> p_eliminado = r_citas.findById(id);
+		if(p_eliminado.isPresent()) {
+			// p_eliminado_total = p_eliminado.get(); aquí se elimina todo
 			r_citas.deleteById(id);
-			return true;
-		} else {
-			return false;
 		}
 	}
 }

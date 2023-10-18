@@ -1,13 +1,17 @@
 package org.pe.neurodispuesta.servicios;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.pe.neurodispuesta.mapeados.CuidadorMapeados;
-import org.pe.neurodispuesta.mapeados.ParticipanteMapeados;
+import org.pe.neurodispuesta.mapeadores.AsignarEspecialistaMapper;
+import org.pe.neurodispuesta.mapeadores.ParticipanteMapper;
 import org.pe.neurodispuesta.modelos.Participante;
+import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
-import org.pe.neurodispuesta.transferencias.PrtcDto;
+import org.pe.neurodispuesta.transferencias.AsignarEspecialistaDTO;
+import org.pe.neurodispuesta.transferencias.ParticipanteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,50 +22,59 @@ public class ParticipanteService {
 	private IParticipanteRepository r_participantes;
 	
 	@Autowired
-	private ParticipanteMapeados mp_participantes;
+	private ICuidadorRepository r_cuidadores;
 	
 	@Autowired
-	private CuidadorMapeados mp_cuidadores;
+	private ParticipanteMapper mp_participantes;
 	
-	public List<PrtcDto> listar(){
-		List<Participante> l_sin_procesar = r_participantes.findAll();
-		List<PrtcDto> l_procesada = l_sin_procesar.stream()
-			.map(c -> mp_participantes.crearDto(c))
-			.collect(Collectors.toList());
-		return l_procesada;
+	@Autowired
+	private AsignarEspecialistaMapper mp_asignaciones;
+	
+	public List<ParticipanteDTO> listarTodos(){
+		List<Participante> l_parcial = r_participantes.findAll();
+		return l_parcial.stream().map(mp_participantes::crearDto).collect(Collectors.toList());
 	}
 	
-	public PrtcDto buscar(int id) {
-		Participante p_buscado = r_participantes.findById(id).get();
-		PrtcDto p_procesado = mp_participantes.crearDto(p_buscado);
-		p_procesado.setCuidador(mp_cuidadores.crearDto(p_buscado.getCuidador()));
-		return p_procesado;
+	public Optional<ParticipanteDTO> buscar(int id){
+		Optional<Participante> p_buscado = r_participantes.findById(id);
+		return p_buscado.map(mp_participantes::crearDto);
 	}
 	
-	public PrtcDto agregar(PrtcDto ingresar_p) {
-		ingresar_p.setParticipanteId(0);
-		Participante egresar = mp_participantes.convertir(ingresar_p);
-		egresar.setCuidador(mp_cuidadores.convertir(ingresar_p.getCuidador()));
-		return mp_participantes.crearDto(r_participantes.saveAndFlush(egresar));
+	public ParticipanteDTO agregar(ParticipanteDTO p_nuevo) throws ParseException {
+		Participante p_procesado = mp_participantes.crearEntidad(p_nuevo);
+		return mp_participantes.crearDto(r_participantes.saveAndFlush(p_procesado));
 	}
 	
-	public PrtcDto modificar(int id, PrtcDto modificar_p) throws Exception {
-		if(r_participantes.findById(id).isPresent()) {
-			modificar_p.setParticipanteId(id);
-			Participante egresar = mp_participantes.convertir(modificar_p);
-			egresar.setCuidador(mp_cuidadores.convertir(modificar_p.getCuidador()));
-			return mp_participantes.crearDto(r_participantes.saveAndFlush(egresar));
+	public ParticipanteDTO modificar(int id, ParticipanteDTO p_cambiar) {
+		Optional<Participante> p_encontrado = r_participantes.findById(id);
+		if(p_encontrado.isPresent()) {
+			Participante p_procesado = p_encontrado.get();
+			p_procesado.setNmbrs(p_cambiar.getNmbrs());
+			p_procesado.setApllds(p_cambiar.getApllds());
+			p_procesado.setDni(p_cambiar.getDni());
+			p_procesado.setCorreoE(p_cambiar.getCorreoE());
+			p_procesado.setTelf(p_cambiar.getTelf());
+			p_procesado.setFechaRegistro(p_cambiar.getFechaRegistro());
+			p_procesado.setCuidador(r_cuidadores.findById(p_cambiar.getCuidadorId()).get());
+			return mp_participantes.crearDto(r_participantes.saveAndFlush(p_procesado));
 		} else {
-			throw new IllegalArgumentException("Necesitas un ID para su modificación");
+			return null;
 		}
 	}
 	
-	public boolean eliminar(int id) {
-		if(r_participantes.findById(id).isPresent()) {
+	public void eliminar(int id) {
+		Optional<Participante> p_eliminado = r_participantes.findById(id);
+		if(p_eliminado.isPresent()) {
+			// p_eliminado_total = p_eliminado.get(); aquí se elimina todo
 			r_participantes.deleteById(id);
-			return true;
-		} else {
-			return false;
 		}
+	}
+	
+	public List<AsignarEspecialistaDTO> listar_asignaciones(int participanteId){
+		Optional<Participante> p_asignado = r_participantes.findById(participanteId);
+		return p_asignado.map(p -> p.getAsignaparticipantes().stream()
+				.map(mp_asignaciones::crearDto)
+				.collect(Collectors.toList()))
+				.orElse(null);
 	}
 }

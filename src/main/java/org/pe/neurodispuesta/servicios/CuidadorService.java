@@ -1,14 +1,17 @@
 package org.pe.neurodispuesta.servicios;
 
+import java.text.ParseException;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.pe.neurodispuesta.mapeados.CuidadorMapeados;
-import org.pe.neurodispuesta.mapeados.ParticipanteMapeados;
+import org.pe.neurodispuesta.mapeadores.CuidadorMapper;
+import org.pe.neurodispuesta.mapeadores.ParticipanteMapper;
 import org.pe.neurodispuesta.modelos.Cuidador;
 import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
-import org.pe.neurodispuesta.transferencias.CddrDto;
-import org.pe.neurodispuesta.transferencias.PrtcDto;
+import org.pe.neurodispuesta.transferencias.CuidadorDTO;
+import org.pe.neurodispuesta.transferencias.ParticipanteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,51 +22,54 @@ public class CuidadorService {
 	private ICuidadorRepository r_cuidadores;
 	
 	@Autowired
-	private CuidadorMapeados mp_cuidadores;
+	private ParticipanteMapper mp_participantes;
 	
 	@Autowired
-	private ParticipanteMapeados mp_participantes;
+	private CuidadorMapper mp_cuidadores;
 	
-	public List<CddrDto> listar(){
-		List<Cuidador> l_sin_procesar = r_cuidadores.findAll();
-		List<CddrDto> l_procesada = l_sin_procesar.stream()
-			.map(c -> mp_cuidadores.crearDto(c))
-			.collect(Collectors.toList());
-		return l_procesada;
+	public List<CuidadorDTO> listarTodos(){
+		List<Cuidador> l_parcial = r_cuidadores.findAll();
+		return l_parcial.stream().map(mp_cuidadores::crearDto).collect(Collectors.toList());
 	}
 	
-	public CddrDto buscar(int id) {
-		Cuidador c_buscado = r_cuidadores.findById(id).get();
-		CddrDto c_procesado = mp_cuidadores.crearDto(c_buscado);
-		List<PrtcDto> l_parts = c_buscado.getParticipantes().stream()
-			.map(p -> mp_participantes.crearDto(p))
-			.collect(Collectors.toList());
-		c_procesado.setParticipantes(l_parts);
-		return c_procesado;
+	public Optional<CuidadorDTO> buscar(int id){
+		Optional<Cuidador> p_buscado = r_cuidadores.findById(id);
+		return p_buscado.map(mp_cuidadores::crearDto);
 	}
 	
-	public CddrDto agregar(CddrDto ingresar_c) {
-		ingresar_c.setCuidadorId(0);
-		Cuidador egresar = mp_cuidadores.convertir(ingresar_c);
-		return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(egresar));
+	public CuidadorDTO agregar(CuidadorDTO p_nuevo) throws ParseException {
+		Cuidador p_procesado = mp_cuidadores.crearEntidad(p_nuevo);
+		return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(p_procesado));
 	}
 	
-	public CddrDto modificar(int id, CddrDto modificar_c) throws Exception {
-		if(r_cuidadores.findById(id).isPresent()) {
-			modificar_c.setCuidadorId(id);
-			Cuidador procesar_c = mp_cuidadores.convertir(modificar_c);
-			return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(procesar_c));
+	public CuidadorDTO modificar(int id, CuidadorDTO p_cambiar) {
+		Optional<Cuidador> p_encontrado = r_cuidadores.findById(id);
+		if(p_encontrado.isPresent()) {
+			Cuidador p_procesado = p_encontrado.get();
+			p_procesado.setNmbrs(p_cambiar.getNmbrs());
+			p_procesado.setApllds(p_cambiar.getApllds());
+			p_procesado.setDni(p_cambiar.getDni());
+			p_procesado.setCorreoE(p_cambiar.getCorreoE());
+			p_procesado.setTelf(p_cambiar.getTelf());
+			return mp_cuidadores.crearDto(r_cuidadores.saveAndFlush(p_procesado));
 		} else {
-			throw new IllegalArgumentException("Necesitas un ID para su modificación");
+			return null;
 		}
 	}
 	
-	public boolean eliminar(int id) {
-		if(r_cuidadores.findById(id).isPresent()) {
+	public void eliminar(int id) {
+		Optional<Cuidador> p_eliminado = r_cuidadores.findById(id);
+		if(p_eliminado.isPresent()) {
+			// p_eliminado_total = p_eliminado.get(); aquí se elimina todo
 			r_cuidadores.deleteById(id);
-			return true;
-		} else {
-			return false;
 		}
+	}
+	
+	public List<ParticipanteDTO> listar_participantes(int cuidadorInt){
+		Optional<Cuidador> p_asignado = r_cuidadores.findById(cuidadorInt);
+		return p_asignado.map(p -> p.getParticipantes().stream()
+				.map(mp_participantes::crearDto)
+				.collect(Collectors.toList()))
+				.orElse(null);
 	}
 }
