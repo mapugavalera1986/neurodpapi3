@@ -9,7 +9,6 @@ import org.pe.neurodispuesta.mapeadores.ParticipanteMapper;
 import org.pe.neurodispuesta.modelos.Participante;
 import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
-import org.pe.neurodispuesta.transferencias.AsignarEspecialistaDTO;
 import org.pe.neurodispuesta.transferencias.ParticipanteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,19 +1,14 @@
 package org.pe.neurodispuesta.modelos;
 
 import java.util.Date;
-import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,21 +17,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="Participantes")
-public class Participante {
+@Table(name="asignaciones")
+public class Acompnt {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int participanteId;
-	private String nmbrs;
-	private String apllds;
-	private String dni;
-	private String correoE;
-	private String telf;
-	@Temporal(TemporalType.DATE)
+	private int acompntId;
 	private Date fechaRegistro;
 	@ManyToOne
-	@JoinColumn(name="cuidador_id")
-	private Cuidador cuidador;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participante")
-	private List<Acompnt> acompnts;
+	@JoinColumn(name="participante_id")
+	private Participante participante;
+	@ManyToOne
+	@JoinColumn(name="especialista_id")
+	private Especialista especialista;
+	private boolean activo;
 }

@@ -5,11 +5,10 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class AsignarEspecialistaDTO {
-	private int asignarId;
+public class AcompntDTO {
+	private int acompntId;
+	private Date fechaRegistro;
 	private int participanteId;
 	private int especialistaId;
-	private Date fechaEstablecimiento;
-	private boolean activa;
-	
+	private boolean activo;
 }

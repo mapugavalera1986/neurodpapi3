@@ -65,7 +65,6 @@ public class EspecialistaService {
 	public void eliminar(int id) {
 		Optional<Especialista> p_eliminado = r_especialistas.findById(id);
 		if(p_eliminado.isPresent()) {
-			// p_eliminado_total = p_eliminado.get(); aquí se elimina todo
 			r_especialistas.deleteById(id);
 		}
 	}
