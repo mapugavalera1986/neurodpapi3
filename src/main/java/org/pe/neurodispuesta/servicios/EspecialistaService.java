@@ -56,6 +56,7 @@ public class EspecialistaService {
 			p_procesado.setCorreoE(p_cambiar.getCorreoE());
 			p_procesado.setTelf(p_cambiar.getTelf());
 			p_procesado.setFechaIngreso(p_cambiar.getFechaIngreso());
+			p_procesado.setActivo(p_cambiar.isActivo());
 			return mp_especialistas.crearDto(r_especialistas.saveAndFlush(p_procesado));
 		} else {
 			return null;
@@ -69,4 +70,11 @@ public class EspecialistaService {
 		}
 	}
 	
+	public void cambiarActivation(int id) {
+		Optional<Especialista> p_encontrado = r_especialistas.findById(id);
+		if(p_encontrado.isPresent()) {
+			Especialista p_procesado = p_encontrado.get();
+			p_procesado.setActivo(!p_procesado.isActivo());
+		}
+	}
 }

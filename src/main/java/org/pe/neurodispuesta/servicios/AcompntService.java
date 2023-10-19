@@ -7,14 +7,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.pe.neurodispuesta.mapeadores.AcompntMapper;
-import org.pe.neurodispuesta.mapeadores.ParticipanteMapper;
+import org.pe.neurodispuesta.mapeadores.CitaMapper;
 import org.pe.neurodispuesta.modelos.Acompnt;
-import org.pe.neurodispuesta.modelos.Participante;
+import org.pe.neurodispuesta.modelos.Cita;
 import org.pe.neurodispuesta.repositorios.IAcompntRepository;
+import org.pe.neurodispuesta.repositorios.ICitaRepository;
 import org.pe.neurodispuesta.repositorios.IEspecialistaRepository;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
 import org.pe.neurodispuesta.transferencias.AcompntDTO;
-import org.pe.neurodispuesta.transferencias.ParticipanteDTO;
+import org.pe.neurodispuesta.transferencias.CitaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,16 +26,19 @@ public class AcompntService {
 	private IAcompntRepository r_acompnts;
 	
 	@Autowired
+	private ICitaRepository r_citas;
+
+	@Autowired
 	private IParticipanteRepository r_participantes;
 	
 	@Autowired
 	private IEspecialistaRepository r_especialistas;
-	
-	@Autowired
-	private ParticipanteMapper mp_participantes;
-	
+		
 	@Autowired
 	private AcompntMapper mp_acompnts;
+	
+	@Autowired
+	private CitaMapper mp_citas;
 	
 	public List<AcompntDTO> listarTodos(){
 		List<Acompnt> l_parcial = r_acompnts.findAll();
@@ -68,7 +72,26 @@ public class AcompntService {
 	public void eliminar(int id) {
 		Optional<Acompnt> p_eliminado = r_acompnts.findById(id);
 		if(p_eliminado.isPresent()) {
+			for(Cita c: p_eliminado.get().getCitas()) {
+				r_citas.deleteById(c.getCitaId());
+			}
 			r_acompnts.deleteById(id);
 		}
+	}
+	
+	public void cambiarActivation(int id) {
+		Optional<Acompnt> p_encontrado = r_acompnts.findById(id);
+		if(p_encontrado.isPresent()) {
+			Acompnt p_procesado = p_encontrado.get();
+			p_procesado.setActivo(!p_procesado.isActivo());
+		}
+	}
+	
+	public List<CitaDTO> listar_citas(int acompntInt){
+		Optional<Acompnt> p_asignado = r_acompnts.findById(acompntInt);
+		return p_asignado.map(p -> p.getCitas().stream()
+				.map(mp_citas::crearDto)
+				.collect(Collectors.toList()))
+				.orElse(null);
 	}
 }
