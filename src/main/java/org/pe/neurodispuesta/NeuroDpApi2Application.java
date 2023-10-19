@@ -8,6 +8,6 @@ public class NeuroDpApi2Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(NeuroDpApi2Application.class, args);
-		System.out.println("Ya puedes probar cómo funciona");
+		System.out.println("El servicio ya funciona");
 	}
 }
