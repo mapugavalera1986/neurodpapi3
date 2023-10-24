@@ -41,6 +41,12 @@ public class CuidadorController {
 		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/{id}")
+	public ResponseEntity<CuidadorDTO> modificar(@PathVariable int id, @RequestBody CuidadorDTO cambiar) throws ParseException{
+		CuidadorDTO procesado = s_cuidadores.modificar(id, cambiar);
+		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
+	}
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> eliminar(@PathVariable int id){
 		s_cuidadores.eliminar(id);

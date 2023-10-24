@@ -3,8 +3,8 @@ package org.pe.neurodispuesta.controladores;
 import java.text.ParseException;
 import java.util.List;
 
-import org.pe.neurodispuesta.servicios.ParticipanteService;
-import org.pe.neurodispuesta.transferencias.ParticipanteDTO;
+import org.pe.neurodispuesta.servicios.CitaService;
+import org.pe.neurodispuesta.transferencias.CitaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,39 +17,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/inscritos")
-public class ParticipanteController {
+@RequestMapping("/api/citas")
+public class CitaController {
 	
 	@Autowired
-	private ParticipanteService s_participantes;
+	private CitaService s_citas;
 	
 	@GetMapping
-	public ResponseEntity<List<ParticipanteDTO>> listar(){
-		List<ParticipanteDTO> l_completa = s_participantes.listarTodos();
+	public ResponseEntity<List<CitaDTO>> listar(){
+		List<CitaDTO> l_completa = s_citas.listarTodos();
 		return new ResponseEntity<>(l_completa, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ParticipanteDTO> buscar(@PathVariable int id){
-		return s_participantes.buscar(id).map(p -> new ResponseEntity<>(p, HttpStatus.OK))
+	public ResponseEntity<CitaDTO> buscar(@PathVariable int id){
+		return s_citas.buscar(id).map(p -> new ResponseEntity<>(p, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 	
 	@PostMapping
-	public ResponseEntity<ParticipanteDTO> agregar(@RequestBody ParticipanteDTO nuevo) throws ParseException{
-		ParticipanteDTO procesado = s_participantes.agregar(nuevo);
+	public ResponseEntity<CitaDTO> agregar(@RequestBody CitaDTO nuevo) throws ParseException{
+		CitaDTO procesado = s_citas.agregar(nuevo);
 		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/{id}")
-	public ResponseEntity<ParticipanteDTO> modificar(@PathVariable int id, @RequestBody ParticipanteDTO cambiar) throws ParseException{
-		ParticipanteDTO procesado = s_participantes.modificar(id, cambiar);
+	public ResponseEntity<CitaDTO> modificar(@PathVariable int id, @RequestBody CitaDTO cambiar) throws ParseException{
+		CitaDTO procesado = s_citas.modificar(id, cambiar);
 		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> eliminar(@PathVariable int id){
-		s_participantes.eliminar(id);
+		s_citas.eliminar(id);
 		return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
 	}
 }
