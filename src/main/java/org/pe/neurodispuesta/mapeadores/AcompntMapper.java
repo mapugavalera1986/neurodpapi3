@@ -25,7 +25,7 @@ public class AcompntMapper {
 		cambio.setAcompntId(ing_acpn.getAcompntId());
 		cambio.setFechaRegistro(ing_acpn.getFechaRegistro());
 		cambio.setParticipanteId(ing_acpn.getParticipante().getParticipanteId());
-		cambio.setParticipanteId(ing_acpn.getEspecialista().getEspecialistaId());
+		cambio.setEspecialistaId(ing_acpn.getEspecialista().getEspecialistaId());
 		cambio.setActivo(ing_acpn.isActivo());
 		return cambio;
 	}

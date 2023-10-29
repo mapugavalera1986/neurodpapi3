@@ -34,7 +34,7 @@ public class CitaMapper {
 		cambio.setFecha(ing_citt.getFecha());
 		Optional<Acompnt> acompnt = r_acompnts.findById(ing_citt.getAcompnt_id());
 		cambio.setAcompnt(acompnt.get());
-		cambio.setModalidadCita(ModalidadCita.valueOf(ing_citt.getEstadoCita()));
+		cambio.setModalidadCita(ModalidadCita.valueOf(ing_citt.getModalidadCita()));
 		cambio.setEstadoCita(EstadoCita.valueOf(ing_citt.getEstadoCita()));
 		return cambio;
 	}

@@ -34,7 +34,7 @@ public class CitaController {
 		return s_citas.buscar(id).map(p -> new ResponseEntity<>(p, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<CitaDTO> agregar(@RequestBody CitaDTO nuevo) throws ParseException{
 		CitaDTO procesado = s_citas.agregar(nuevo);
