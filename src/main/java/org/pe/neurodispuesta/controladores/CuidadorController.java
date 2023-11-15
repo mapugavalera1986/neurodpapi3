@@ -3,7 +3,7 @@ package org.pe.neurodispuesta.controladores;
 import java.text.ParseException;
 import java.util.List;
 
-import org.pe.neurodispuesta.servicios.CuidadorService;
+import org.pe.neurodispuesta.servicios.ICuidadorService;
 import org.pe.neurodispuesta.transferencias.CuidadorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CuidadorController {
 	
 	@Autowired
-	private CuidadorService s_cuidadores;
+	private ICuidadorService s_cuidadores;
 	
 	@GetMapping
 	public ResponseEntity<List<CuidadorDTO>> listar(){
@@ -31,8 +31,7 @@ public class CuidadorController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<CuidadorDTO> buscar(@PathVariable int id){
-		return s_cuidadores.buscar(id).map(p -> new ResponseEntity<>(p, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return new ResponseEntity<CuidadorDTO>(s_cuidadores.buscar(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
