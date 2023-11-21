@@ -26,7 +26,7 @@ public class ParticipanteController {
 	
 	@Autowired
 	private IParticipanteService s_participantes;
-	
+		
 	@GetMapping
 	public ResponseEntity<List<Participante>> listar(){
 		List<Participante> l_completa = s_participantes.listarTodos();
@@ -36,6 +36,11 @@ public class ParticipanteController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Participante> buscar(@PathVariable int id){
 		return new ResponseEntity<Participante>(s_participantes.buscar(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/apoderado/{cuidadorId}")
+	public ResponseEntity<List<Participante>> buscarCuidador(@PathVariable int cuidadorId){
+		return new ResponseEntity<List<Participante>>(s_participantes.buscarCuidador(cuidadorId), HttpStatus.OK);
 	}
 	
 	@PostMapping

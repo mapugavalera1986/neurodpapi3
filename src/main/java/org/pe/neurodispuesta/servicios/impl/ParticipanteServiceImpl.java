@@ -1,10 +1,13 @@
 package org.pe.neurodispuesta.servicios.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.pe.neurodispuesta.modelos.Participante;
+import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
+import org.pe.neurodispuesta.modelos.Cuidador;
 import org.pe.neurodispuesta.servicios.IParticipanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,9 @@ public class ParticipanteServiceImpl implements IParticipanteService{
 	
 	@Autowired
 	private IParticipanteRepository r_participantes;
+	
+	@Autowired
+	private ICuidadorRepository r_cuidadores;
 	
 	@Override
 	public List<Participante> listarTodos() {
@@ -32,7 +38,7 @@ public class ParticipanteServiceImpl implements IParticipanteService{
 			return new Participante();
 		}
 	}
-
+	
 	@Override
 	public Participante agregar(Participante p_nuevo) {
 		return r_participantes.save(p_nuevo);
@@ -45,7 +51,7 @@ public class ParticipanteServiceImpl implements IParticipanteService{
 			p_cambiar.setParticipanteId(id);
 			return r_participantes.saveAndFlush(p_cambiar);
 		} else {
-			return null;
+			return new Participante();
 		}
 	}
 
@@ -55,5 +61,16 @@ public class ParticipanteServiceImpl implements IParticipanteService{
 		if(p_eliminado.isPresent()) {
 			r_participantes.deleteById(id);
 		}
+	}
+
+	@Override
+	public List<Participante> buscarCuidador(int cuidadorId) {
+		Cuidador c_buscado = r_cuidadores.findById(cuidadorId).get();
+		List<Participante> buscados = new LinkedList<Participante>();
+		Optional<List<Participante>> encontrados = r_participantes.findByCuidador(c_buscado);
+		if(encontrados.isPresent()) {
+			buscados = encontrados.get();
+		}
+		return buscados;
 	}
 }
