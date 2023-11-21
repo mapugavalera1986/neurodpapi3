@@ -2,13 +2,13 @@ package org.pe.neurodispuesta.servicios;
 
 import java.util.List;
 
-import org.pe.neurodispuesta.transferencias.EspecialistaDTO;
+import org.pe.neurodispuesta.modelos.Especialista;
 
 public interface IEspecialistaService {
-	public List<EspecialistaDTO> listarTodos();
-	public EspecialistaDTO buscar(int id);
-	public EspecialistaDTO agregar(EspecialistaDTO c_nuevo);
-	public EspecialistaDTO modificar(int id, EspecialistaDTO c_cambiar);
-	public void eliminar(int id);
-	public void cambiarActivation(int id);
+	public List<Especialista> listarTodos();
+	public Especialista buscar(int id);
+	public Especialista agregar(Especialista c_nuevo);
+	public Especialista modificar(int id, Especialista c_cambiar);
+	public boolean eliminar(int id);
+	//public boolean cambiarActivation(int id);
 }

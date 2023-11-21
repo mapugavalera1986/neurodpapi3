@@ -1,7 +1,11 @@
 package org.pe.neurodispuesta.modelos;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,6 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="Participantes")
+@JsonInclude(JsonInclude.Include.NON_NULL) 
 public class Participante {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +37,11 @@ public class Participante {
 	private String dni;
 	private String correoE;
 	private String telf;
-	@Temporal(TemporalType.DATE)
-	private Date fechaRegistro;
+	private LocalDate fechaRegistro;
 	@ManyToOne
 	@JoinColumn(name="cuidador_id")
 	private Cuidador cuidador;
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participante")
 	private List<Acompnt> acompnts;
 }

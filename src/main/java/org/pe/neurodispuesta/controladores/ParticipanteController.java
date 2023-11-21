@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import org.pe.neurodispuesta.servicios.IParticipanteService;
-import org.pe.neurodispuesta.transferencias.ParticipanteDTO;
+import org.pe.neurodispuesta.modelos.Participante;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,25 +28,25 @@ public class ParticipanteController {
 	private IParticipanteService s_participantes;
 	
 	@GetMapping
-	public ResponseEntity<List<ParticipanteDTO>> listar(){
-		List<ParticipanteDTO> l_completa = s_participantes.listarTodos();
+	public ResponseEntity<List<Participante>> listar(){
+		List<Participante> l_completa = s_participantes.listarTodos();
 		return new ResponseEntity<>(l_completa, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ParticipanteDTO> buscar(@PathVariable int id){
-		return new ResponseEntity<ParticipanteDTO>(s_participantes.buscar(id), HttpStatus.OK);
+	public ResponseEntity<Participante> buscar(@PathVariable int id){
+		return new ResponseEntity<Participante>(s_participantes.buscar(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<ParticipanteDTO> agregar(@RequestBody ParticipanteDTO nuevo) throws ParseException{
-		ParticipanteDTO procesado = s_participantes.agregar(nuevo);
+	public ResponseEntity<Participante> agregar(@RequestBody Participante nuevo) throws ParseException{
+		Participante procesado = s_participantes.agregar(nuevo);
 		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ParticipanteDTO> modificar(@PathVariable int id, @RequestBody ParticipanteDTO cambiar) throws ParseException{
-		ParticipanteDTO procesado = s_participantes.modificar(id, cambiar);
+	public ResponseEntity<Participante> modificar(@PathVariable int id, @RequestBody Participante cambiar) throws ParseException{
+		Participante procesado = s_participantes.modificar(id, cambiar);
 		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
 	}
 	
