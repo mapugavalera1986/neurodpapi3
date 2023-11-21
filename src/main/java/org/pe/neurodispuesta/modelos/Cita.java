@@ -1,7 +1,6 @@
 package org.pe.neurodispuesta.modelos;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +24,7 @@ public class Cita {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int citaId;
-	private Date fecha;
+	private LocalDate fecha;
 	@ManyToOne
 	@JoinColumn(name="acompnt_id")
 	private Acompnt acompnt;

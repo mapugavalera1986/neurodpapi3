@@ -1,7 +1,6 @@
 package org.pe.neurodispuesta.modelos;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -26,7 +25,7 @@ public class Acompnt {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int acompntId;
-	//private LocalDate fechaRegistro;
+	private LocalDate fechaRegistro;
 	@ManyToOne
 	@JoinColumn(name="participante_id")
 	private Participante participante;

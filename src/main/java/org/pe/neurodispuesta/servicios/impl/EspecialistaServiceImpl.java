@@ -43,7 +43,7 @@ public class EspecialistaServiceImpl implements IEspecialistaService{
 		Optional<Especialista> e_buscado = r_especialistas.findById(id);
 		if(e_buscado.isPresent()) {
 			e_cambiar.setEspecialistaId(id);
-			return r_especialistas.save(e_cambiar);
+			return r_especialistas.saveAndFlush(e_cambiar);
 		} else {
 			return new Especialista();
 		}

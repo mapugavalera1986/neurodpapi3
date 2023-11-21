@@ -1,6 +1,5 @@
 package org.pe.neurodispuesta.controladores;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.pe.neurodispuesta.servicios.IEspecialistaService;

@@ -43,7 +43,7 @@ public class ParticipanteServiceImpl implements IParticipanteService{
 		Optional<Participante> p_encontrado = r_participantes.findById(id);
 		if(p_encontrado.isPresent()) {
 			p_cambiar.setParticipanteId(id);
-			return r_participantes.save(p_cambiar);
+			return r_participantes.saveAndFlush(p_cambiar);
 		} else {
 			return null;
 		}

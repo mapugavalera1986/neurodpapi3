@@ -49,7 +49,7 @@ public class CuidadorServiceImpl implements ICuidadorService{
 		Optional<Cuidador> c_buscado = r_cuidadores.findById(id);
 		if(c_buscado.isPresent()) {
 			c_cambiar.setCuidadorId(id);
-			return r_cuidadores.save(c_cambiar);
+			return r_cuidadores.saveAndFlush(c_cambiar);
 		} else {
 			return new Cuidador();
 		}
