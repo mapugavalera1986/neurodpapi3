@@ -2,12 +2,14 @@ package org.pe.neurodispuesta.servicios.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.pe.neurodispuesta.mapeador.CuidadorMapper;
 import org.pe.neurodispuesta.modelos.Cuidador;
-import org.pe.neurodispuesta.modelos.Participante;
 import org.pe.neurodispuesta.repositorios.ICuidadorRepository;
 import org.pe.neurodispuesta.repositorios.IParticipanteRepository;
 import org.pe.neurodispuesta.servicios.ICuidadorService;
+import org.pe.neurodispuesta.transferencia.CuidadorDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,45 +25,47 @@ public class CuidadorServiceImpl implements ICuidadorService{
 	@Autowired
 	private IParticipanteRepository r_participantes;
 	
-	
+	@Autowired
+	private CuidadorMapper mp_cuidadores;
+
 	@Override
-	public List<Cuidador> listarTodos() {
-		return r_cuidadores.findAll();
+	public List<CuidadorDto> listarTodos() {
+		List<Cuidador> listar = r_cuidadores.findAll();
+		return listar.stream().map(mp_cuidadores::volverDto).collect(Collectors.toList());
 	}
 
 	@Override
-	public Cuidador buscar(int id) {
-		Optional<Cuidador> c_buscado = r_cuidadores.findById(id);
-		if(c_buscado.isPresent()) {
-			return c_buscado.get();
-		}else {
-			return new Cuidador();
-		}
+	public Optional<CuidadorDto> buscar(int id) {
+		Optional<Cuidador> encontrado = r_cuidadores.findById(id);
+		return encontrado.map(mp_cuidadores::volverDto);
 	}
 
 	@Override
-	public Cuidador agregar(Cuidador c_nuevo) {
-		return r_cuidadores.save(c_nuevo);
+	public CuidadorDto agregar(CuidadorDto c_nuevo) {
+		Cuidador agregar = mp_cuidadores.volverEntidad(c_nuevo);
+		agregar = r_cuidadores.save(agregar);
+		return mp_cuidadores.volverDto(agregar);
 	}
-	
+
 	@Override
-	public Cuidador modificar(int id, Cuidador c_cambiar) {
-		Optional<Cuidador> c_buscado = r_cuidadores.findById(id);
-		if(c_buscado.isPresent()) {
-			c_cambiar.setCuidadorId(id);
-			return r_cuidadores.saveAndFlush(c_cambiar);
+	public CuidadorDto modificar(int id, CuidadorDto c_cambiar) {
+		Optional<Cuidador> encontrar = r_cuidadores.findById(id);
+		if(encontrar.isPresent()) {
+			Cuidador procesar = mp_cuidadores.volverEntidad(c_cambiar);
+			procesar.setCuidadorId(id);
+			procesar = r_cuidadores.save(procesar);
+			return mp_cuidadores.volverDto(procesar);
 		} else {
-			return new Cuidador();
+			return null;
 		}
 	}
 
 	@Override
-	public void eliminar(int id) {
-		Optional<Cuidador> c_buscado = r_cuidadores.findById(id);
-		if(c_buscado.isPresent()) {
-			for(Participante p : c_buscado.get().getParticipantes()) {
-				r_participantes.deleteById(p.getParticipanteId());
-			}
+	public void eliminar(int id) {//Falta agregar borrado de participantesw
+		Optional<Cuidador> encontrar = r_cuidadores.findById(id);
+		if(encontrar.isPresent()) {
+			Cuidador encontrado = encontrar.get();
+			r_participantes.deleteByCuidador(encontrado);
 			r_cuidadores.deleteById(id);
 		}
 	}

@@ -32,7 +32,6 @@ public class Cuidador {
 	private String dni;
 	private String correoE;
 	private String telf;
-	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuidador")
 	private List<Participante> participantes;
 }

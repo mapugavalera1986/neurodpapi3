@@ -9,6 +9,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IEspecialistaRepository extends JpaRepository<Especialista, Integer> {
-	List<Especialista> findAllByActivo(boolean activo);
-	Optional<Especialista> findByEspecialistaIdAndActivo(int id, boolean activo);
 }

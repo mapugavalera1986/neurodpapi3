@@ -1,13 +1,15 @@
 package org.pe.neurodispuesta.servicios;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.pe.neurodispuesta.modelos.Cuidador;
+import org.pe.neurodispuesta.transferencia.CuidadorDto;
 
 public interface ICuidadorService {
-	public List<Cuidador> listarTodos();
-	public Cuidador buscar(int id);
-	public Cuidador agregar(Cuidador c_nuevo);
-	public Cuidador modificar(int id, Cuidador c_cambiar);
-	public void eliminar(int id);
+	List<CuidadorDto> listarTodos();
+	Optional<CuidadorDto> buscar(int id);
+	CuidadorDto agregar(CuidadorDto c_nuevo);
+	CuidadorDto modificar(int id, CuidadorDto c_cambiar);
+	void eliminar(int id);
 }

@@ -26,8 +26,8 @@ public class Cita {
 	private int citaId;
 	private LocalDate fecha;
 	@ManyToOne
-	@JoinColumn(name="acompnt_id")
-	private Acompnt acompnt;
+	@JoinColumn(name="participante_id")
+	private Participante participante;
 	@Enumerated(EnumType.STRING)
 	private ModalidadCita modalidadCita;
 	@Enumerated(EnumType.STRING)

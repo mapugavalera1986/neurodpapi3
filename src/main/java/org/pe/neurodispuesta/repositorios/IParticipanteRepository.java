@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IParticipanteRepository extends JpaRepository<Participante, Integer> {
 	Optional<List<Participante>>findByCuidador(Cuidador acargo);
+	void deleteByCuidador(Cuidador acargo);
 }

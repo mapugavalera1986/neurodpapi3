@@ -1,10 +1,9 @@
 package org.pe.neurodispuesta.controladores;
 
-import java.text.ParseException;
 import java.util.List;
 
-import org.pe.neurodispuesta.modelos.Cuidador;
 import org.pe.neurodispuesta.servicios.ICuidadorService;
+import org.pe.neurodispuesta.transferencia.CuidadorDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,36 +19,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/apoderados")
 public class CuidadorController {
-	
-	@Autowired
-	private ICuidadorService s_cuidadores;
-	
-	@GetMapping
-	public ResponseEntity<List<Cuidador>> listar(){
-		List<Cuidador> l_completa = s_cuidadores.listarTodos();
-		return new ResponseEntity<>(l_completa, HttpStatus.OK);
-	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<Cuidador> buscar(@PathVariable int id){
-		return new ResponseEntity<Cuidador>(s_cuidadores.buscar(id), HttpStatus.OK);
-	}
-	
-	@PostMapping
-	public ResponseEntity<Cuidador> agregar(@RequestBody Cuidador nuevo) throws ParseException{
-		Cuidador procesado = s_cuidadores.agregar(nuevo);
-		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<Cuidador> modificar(@PathVariable int id, @RequestBody Cuidador cambiar) throws ParseException{
-		Cuidador procesado = s_cuidadores.modificar(id, cambiar);
-		return new ResponseEntity<>(procesado, HttpStatus.CREATED);
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> eliminar(@PathVariable int id){
-		s_cuidadores.eliminar(id);
-		return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
-	}
+
+    @Autowired
+    private ICuidadorService srvc_cuidadores;
+
+    @GetMapping
+    public ResponseEntity<List<CuidadorDto>> listarTodos(){
+        List<CuidadorDto> cuidadores = srvc_cuidadores.listarTodos();
+        return new ResponseEntity<>(cuidadores, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CuidadorDto> buscar(@PathVariable int id){
+        return srvc_cuidadores.buscar(id)
+                .map(cuidador -> new ResponseEntity<>(cuidador,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    public ResponseEntity<CuidadorDto> agregar(@RequestBody CuidadorDto CuidadorDto){
+        CuidadorDto createdCuidador = srvc_cuidadores.agregar(CuidadorDto);
+        return new ResponseEntity<>(createdCuidador,HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CuidadorDto> modificar(@PathVariable int id,@RequestBody CuidadorDto CuidadorDto){
+        CuidadorDto updateCuidador = srvc_cuidadores.modificar(id,CuidadorDto);
+        if(updateCuidador != null){
+            return new ResponseEntity<>(updateCuidador,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable int id){
+        srvc_cuidadores.eliminar(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

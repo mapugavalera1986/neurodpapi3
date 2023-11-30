@@ -34,8 +34,4 @@ public class Especialista {
 	private String correoE;
 	private String telf;
 	private LocalDate fechaIngreso;
-	private boolean activo;
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "especialista")
-	private List<Acompnt> acompnts;
 }

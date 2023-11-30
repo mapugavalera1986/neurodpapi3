@@ -38,7 +38,4 @@ public class Participante {
 	@ManyToOne
 	@JoinColumn(name="cuidador_id")
 	private Cuidador cuidador;
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participante")
-	private List<Acompnt> acompnts;
 }
