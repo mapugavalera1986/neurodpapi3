@@ -1,6 +1,5 @@
 package org.pe.neurodispuesta.transferencia;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;

@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
-import org.pe.neurodispuesta.modelos.Participante;
 import org.pe.neurodispuesta.transferencia.ParticipanteDto;
 
 public interface IParticipanteService {

@@ -1,10 +1,6 @@
 package org.pe.neurodispuesta.modelos;
 
-
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,8 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="cuidadores")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Table(name = "cuidadores")
 public class Cuidador {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
