@@ -52,7 +52,7 @@ public class EspecialistaServiceImpl implements IEspecialistaService{
 			procesar = r_especialistas.save(procesar);
 			return mp_especialistas.volverDto(procesar);
 		} else {
-			return null;
+			return new EspecialistaDto();
 		}
 	}
 
@@ -60,8 +60,6 @@ public class EspecialistaServiceImpl implements IEspecialistaService{
 	public void eliminar(int id) {//Falta agregar las citas
 		Optional<Especialista> encontrar = r_especialistas.findById(id);
 		if(encontrar.isPresent()) {
-			//Especialista encontrado = encontrar.get();
-			//r_participantes.deleteByEspecialista(encontrado);
 			r_especialistas.deleteById(id);
 		}
 	}

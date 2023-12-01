@@ -36,6 +36,11 @@ public class ParticipanteController {
                 .map(participante -> new ResponseEntity<>(participante,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    
+    @GetMapping("/cuiador/{idc}")
+    public ResponseEntity<List<ParticipanteDto>>listarCuidador(@PathVariable int idc){
+    	return new ResponseEntity<>(srvc_participantes.buscarCuidador(idc), HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<ParticipanteDto> agregar(@RequestBody ParticipanteDto ParticipanteDto) throws ParseException{

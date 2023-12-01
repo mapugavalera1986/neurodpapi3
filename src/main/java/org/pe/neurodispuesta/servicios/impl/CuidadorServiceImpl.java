@@ -56,7 +56,7 @@ public class CuidadorServiceImpl implements ICuidadorService{
 			procesar = r_cuidadores.save(procesar);
 			return mp_cuidadores.volverDto(procesar);
 		} else {
-			return null;
+			return new CuidadorDto();
 		}
 	}
 

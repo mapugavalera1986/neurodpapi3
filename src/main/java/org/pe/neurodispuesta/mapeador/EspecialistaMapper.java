@@ -32,7 +32,7 @@ public class EspecialistaMapper {
 		egresar.setRuc(ingresar.getRuc());
 		egresar.setCorreoE(ingresar.getCorreoE());
 		egresar.setTelf(ingresar.getTelf());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
 		LocalDate fecha_registro = LocalDate.parse(ingresar.getFechaIngreso(),formatter);
 		egresar.setFechaIngreso(fecha_registro);
 		return egresar;

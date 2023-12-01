@@ -28,6 +28,9 @@ public class Cita {
 	@ManyToOne
 	@JoinColumn(name="participante_id")
 	private Participante participante;
+	@ManyToOne
+	@JoinColumn(name="especialista_id")
+	private Especialista especialista;
 	@Enumerated(EnumType.STRING)
 	private ModalidadCita modalidadCita;
 	@Enumerated(EnumType.STRING)

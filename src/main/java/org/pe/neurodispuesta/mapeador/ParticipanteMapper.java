@@ -36,7 +36,7 @@ public class ParticipanteMapper {
 		egresar.setDni(ingresar.getDni());
 		egresar.setCorreoE(ingresar.getCorreoE());
 		egresar.setTelf(ingresar.getTelf());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
 		LocalDate fecha_registro = LocalDate.parse(ingresar.getFechaRegistro(), formatter);
 		egresar.setFechaRegistro(fecha_registro);
 		egresar.setCuidador(r_cuidadores.findById(ingresar.getCuidadorId()).get());
